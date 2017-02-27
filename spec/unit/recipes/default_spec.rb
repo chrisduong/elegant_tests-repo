@@ -8,16 +8,14 @@ describe 'ark::default' do
       runner.converge(described_recipe)
     end
 
+    let(:installed_packages) do
+      %w(libtool autoconf unzip rsync make gcc xz-lzma-compat bzip2 tar)
+    end
+
     it 'installs necessary packages' do
-      expect(chef_run).to install_package('libtool')
-      expect(chef_run).to install_package('autoconf')
-      expect(chef_run).to install_package('unzip')
-      expect(chef_run).to install_package('rsync')
-      expect(chef_run).to install_package('make')
-      expect(chef_run).to install_package('gcc')
-      expect(chef_run).to install_package('xz-lzma-compat')
-      expect(chef_run).to install_package('bzip2')
-      expect(chef_run).to install_package('tar')
+      installed_packages.each do |name|
+        expect(chef_run).to install_package(name)
+      end
     end
 
     it "does not install the gcc-c++ package" do
