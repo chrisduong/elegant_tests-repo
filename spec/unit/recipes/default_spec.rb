@@ -49,23 +49,19 @@ describe 'ark::default' do
     end
 
     it "prefix root" do
-      attribute = chef_run.node['ark']['prefix_root']
-      expect(attribute).to eq "/usr/local"
+      expect(attribute('prefix_root')).to eq "/usr/local"
     end
 
     it "prefix bin" do
-      attribute = chef_run.node['ark']['prefix_bin']
-      expect(attribute).to eq "/usr/local/bin"
+      expect(attribute('prefix_bin')).to eq "/usr/local/bin"
     end
 
     it "prefix home" do
-      attribute = chef_run.node['ark']['prefix_home']
-      expect(attribute).to eq "/usr/local"
+      expect(attribute('prefix_home')).to eq "/usr/local"
     end
 
     it "tar binary" do
-      attribute = chef_run.node['ark']['tar']
-      expect(attribute).to eq "/bin/tar"
+      expect(attribute('tar')).to eq "/bin/tar"
     end
   end
 
@@ -80,29 +76,33 @@ describe 'ark::default' do
 
     it_behaves_like "installs packages"
 
+    let(:node) do
+      chef_run.node
+    end
+
+    # Define method `attribute` to not repeating the task for node's attributes retrieval
+    def attribute(name)
+      node[described_cookbook][name]
+    end
+
     it "apache mirror" do
-      attribute = chef_run.node['ark']['apache_mirror']
-      expect(attribute).to eq "http://apache.mirrors.tds.net"
+      expect(attribute('apache_mirror')).to eq "http://apache.mirrors.tds.net"
     end
 
     it "prefix root" do
-      attribute = chef_run.node['ark']['prefix_root']
-      expect(attribute).to eq "/usr/local"
+      expect(attribute('prefix_root')).to eq "/usr/local"
     end
 
     it "prefix bin" do
-      attribute = chef_run.node['ark']['prefix_bin']
-      expect(attribute).to eq "/usr/local/bin"
+      expect(attribute('prefix_bin')).to eq "/usr/local/bin"
     end
 
     it "prefix home" do
-      attribute = chef_run.node['ark']['prefix_home']
-      expect(attribute).to eq "/usr/local"
+      expect(attribute('prefix_home')).to eq "/usr/local"
     end
 
     it "tar binary" do
-      attribute = chef_run.node['ark']['tar']
-      expect(attribute).to eq "/bin/tar"
+      expect(attribute('tar')).to eq "/bin/tar"
     end
   end
 end
