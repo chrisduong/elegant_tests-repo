@@ -34,8 +34,13 @@ describe 'ark::default' do
       expect(chef_run).not_to include_recipe("seven_zip")
     end
 
+    # Implementing a Helper Method
+    let(:node) do
+      chef_run.node
+    end
+
     it "apache mirror" do
-      attribute = chef_run.node['ark']['apache_mirror']
+      attribute = node['ark']['apache_mirror']
       expect(attribute).to eq "http://apache.mirrors.tds.net"
     end
 
