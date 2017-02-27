@@ -2,9 +2,20 @@ require 'spec_helper'
 
 # rubocop:disable Metrics/BlockLength
 describe 'ark::default' do
-  let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(node_attributes)
-    runner.converge(described_recipe)
+  # Shared context for not repeating the same context
+  shared_context 'converged recipe' do
+    let(:node) { chef_run.node }
+
+    # Implementing a Helper Method
+    # Define method `attribute` to not repeating the task for node's attributes retrieval
+    def attribute(name)
+      node[described_cookbook][name]
+    end
+
+    let(:chef_run) do
+      runner = ChefSpec::SoloRunner.new(node_attributes)
+      runner.converge(described_recipe)
+    end
   end
 
   shared_examples 'installs packages' do
@@ -16,6 +27,8 @@ describe 'ark::default' do
   end
 
   context 'when no attributes are specified, on CentOS' do
+    include_context 'converged recipe'
+
     let(:node_attributes) do
       { platform: 'centos', version: '6.7' }
     end
@@ -32,16 +45,6 @@ describe 'ark::default' do
 
     it "does not include the seven_zip recipe" do
       expect(chef_run).not_to include_recipe("seven_zip")
-    end
-
-    # Implementing a Helper Method
-    let(:node) do
-      chef_run.node
-    end
-
-    # Define method `attribute` to not repeating the task for node's attributes retrieval
-    def attribute(name)
-      node[described_cookbook][name]
     end
 
     it "apache mirror" do
@@ -66,6 +69,8 @@ describe 'ark::default' do
   end
 
   context 'when no attributes are specified, on Debian' do
+    include_context 'converged recipe'
+
     let(:node_attributes) do
       { platform: 'ubuntu', platform_family: 'debian', version: '14.04' }
     end
@@ -75,15 +80,6 @@ describe 'ark::default' do
     end
 
     it_behaves_like "installs packages"
-
-    let(:node) do
-      chef_run.node
-    end
-
-    # Define method `attribute` to not repeating the task for node's attributes retrieval
-    def attribute(name)
-      node[described_cookbook][name]
-    end
 
     it "apache mirror" do
       expect(attribute('apache_mirror')).to eq "http://apache.mirrors.tds.net"
