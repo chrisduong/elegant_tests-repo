@@ -39,9 +39,13 @@ describe 'ark::default' do
       chef_run.node
     end
 
+    # Define method `attribute` to not repeating the task for node's attributes retrieval
+    def attribute(name)
+      node[described_cookbook][name]
+    end
+
     it "apache mirror" do
-      attribute = node['ark']['apache_mirror']
-      expect(attribute).to eq "http://apache.mirrors.tds.net"
+      expect(attribute('apache_mirror')).to eq "http://apache.mirrors.tds.net"
     end
 
     it "prefix root" do
