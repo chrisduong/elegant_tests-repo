@@ -7,6 +7,14 @@ describe 'ark::default' do
     runner.converge(described_recipe)
   end
 
+  shared_examples 'installs packages' do
+    it 'installs necessary packages' do
+      installed_packages.each do |name|
+        expect(chef_run).to install_package(name)
+      end
+    end
+  end
+
   context 'when no attributes are specified, on CentOS' do
     let(:node_attributes) do
       { platform: 'centos', version: '6.7' }
@@ -16,11 +24,7 @@ describe 'ark::default' do
       %w(libtool autoconf unzip rsync make gcc xz-lzma-compat bzip2 tar)
     end
 
-    it 'installs necessary packages' do
-      installed_packages.each do |name|
-        expect(chef_run).to install_package(name)
-      end
-    end
+    it_behaves_like "installs packages"
 
     it "does not install the gcc-c++ package" do
       expect(chef_run).not_to install_package("gcc-c++")
@@ -65,11 +69,7 @@ describe 'ark::default' do
       %w(libtool autoconf unzip rsync make gcc autogen shtool pkg-config)
     end
 
-    it 'installs necessary packages' do
-      installed_packages.each do |name|
-        expect(chef_run).to install_package(name)
-      end
-    end
+    it_behaves_like "installs packages"
 
     it "apache mirror" do
       attribute = chef_run.node['ark']['apache_mirror']
