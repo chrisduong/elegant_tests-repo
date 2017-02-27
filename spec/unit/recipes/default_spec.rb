@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+# rubocop:disable Metrics/BlockLength
 describe 'ark::default' do
   context 'when no attributes are specified, on CentOS' do
     let(:chef_run) do
