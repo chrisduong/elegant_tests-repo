@@ -2,10 +2,14 @@ require 'spec_helper'
 
 # rubocop:disable Metrics/BlockLength
 describe 'ark::default' do
+  let(:chef_run) do
+    runner = ChefSpec::SoloRunner.new(node_attributes)
+    runner.converge(described_recipe)
+  end
+
   context 'when no attributes are specified, on CentOS' do
-    let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7')
-      runner.converge(described_recipe)
+    let(:node_attributes) do
+      { platform: 'centos', version: '6.7' }
     end
 
     let(:installed_packages) do
@@ -53,9 +57,8 @@ describe 'ark::default' do
   end
 
   context 'when no attributes are specified, on Debian' do
-    let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(platform: 'ubuntu', platform_family: 'debian', version: '14.04')
-      runner.converge(described_recipe)
+    let(:node_attributes) do
+      { platform: 'ubuntu', platform_family: 'debian', version: '14.04' }
     end
 
     it 'installs necessary packages' do
